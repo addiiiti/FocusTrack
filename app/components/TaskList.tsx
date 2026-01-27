@@ -7,24 +7,35 @@ type Task = {
 type Props = {
   tasks: Task[];
   onToggle: (id: number) => void;
+  onDelete: (id: number) => void; 
 };
 
-export default function TaskList({ tasks, onToggle }: Props) {
+export default function TaskList({ tasks, onToggle, onDelete }: Props) {
   return (
     <ul className="mt-6 space-y-2">
       {tasks.map((task) => (
         <li
           key={task.id}
-          className="flex items-center gap-2"
+          className="flex items-center justify-between gap-2"
         >
-          <input
-            type="checkbox"
-            checked={task.completed}
-            onChange={() => onToggle(task.id)}
-          />
-          <span className={task.completed ? "line-through" : ""}>
-            {task.title}
-          </span>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={task.completed}
+              onChange={() => onToggle(task.id)}
+            />
+            <span className={task.completed ? "line-through" : ""}>
+              {task.title}
+            </span>
+          </div>
+
+         
+          <button
+            onClick={() => onDelete(task.id)}
+            className="text-red-500 font-bold"
+          >
+            Delete
+          </button>
         </li>
       ))}
     </ul>
