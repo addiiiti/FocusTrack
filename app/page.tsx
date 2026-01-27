@@ -1,9 +1,16 @@
+"use client";
+
+import { useState } from "react";
+import TaskInput from "./components/TaskInput";
+
 export default function Home() {
+  const [tasks, setTasks] = useState<string[]>([]);
+
   return (
-    <main className="min-h-screen flex items-center justify-center">
-      <h1 className="text-3xl font-bold">
-        FocusTrack - Your Personal Focus Companion
-      </h1>
+    <main className="max-w-xl mx-auto p-10">
+      <h1 className="text-3xl font-bold mb-6">FocusTrack</h1>
+      <TaskInput onAdd={(task) => setTasks([...tasks, task])} />
     </main>
   );
 }
+
