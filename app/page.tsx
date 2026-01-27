@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskInput from "./components/TaskInput";
 import TaskList from "./components/TaskList";
 import ProgressBar from "./components/ProgressBar";
@@ -13,6 +13,17 @@ type Task = {
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
+
+  // Load tasks from localStorage when component mounts
+  useEffect(() => {
+    const stored = localStorage.getItem("tasks");
+    if (stored) setTasks(JSON.parse(stored));
+  }, []);
+
+  // Save tasks to localStorage whenever tasks state changes
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   const addTask = (title: string) => {
     const newTask: Task = {
