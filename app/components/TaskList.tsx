@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 type Task = {
   id: number;
   title: string;
@@ -17,6 +19,20 @@ export default function TaskList({
   onDelete,
   onEdit,
 }: Props) {
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editText, setEditText] = useState("");
+
+  const startEdit = (task: Task) => {
+    setEditingId(task.id);
+    setEditText(task.title);
+  };
+
+  const saveEdit = (id: number) => {
+    if (!editText.trim()) return;
+    onEdit(id, editText);
+    setEditingId(null);
+  };
+
   return (
     <ul className="mt-6 space-y-2">
       {tasks.map((task) => (
@@ -31,22 +47,45 @@ export default function TaskList({
               onChange={() => onToggle(task.id)}
             />
 
-            <input
-              type="text"
-              value={task.title}
-              onChange={(e) => onEdit(task.id, e.target.value)}
-              className={`bg-transparent outline-none border-b border-transparent focus:border-gray-400 ${
-                task.completed ? "line-through text-gray-400" : ""
-              }`}
-            />
+            {editingId === task.id ? (
+              <input
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                className="border px-2 py-1 rounded"
+              />
+            ) : (
+              <span
+                className={task.completed ? "line-through text-gray-400" : ""}
+              >
+                {task.title}
+              </span>
+            )}
           </div>
 
-          <button
-            onClick={() => onDelete(task.id)}
-            className="text-red-500 font-bold"
-          >
-            Delete
-          </button>
+          <div className="flex gap-2">
+            {editingId === task.id ? (
+              <button
+                onClick={() => saveEdit(task.id)}
+                className="text-green-600 font-semibold"
+              >
+                Save
+              </button>
+            ) : (
+              <button
+                onClick={() => startEdit(task)}
+                className="text-blue-500 font-semibold"
+              >
+                Edit
+              </button>
+            )}
+
+            <button
+              onClick={() => onDelete(task.id)}
+              className="text-red-500 font-semibold"
+            >
+              Delete
+            </button>
+          </div>
         </li>
       ))}
     </ul>
